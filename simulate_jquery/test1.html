@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>模拟JQuery底层的链式编程</title>
+  </head>
+  <body>
+    <input id="inp" type="button" value="点我！" />
+    <script type="text/javascript" src="custom_01.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      // alert($);
+      $.onReady(function() {
+        // 使用链式编程的方式连续调用他的方法
+        $("#inp").addEvent("click", function(e) {
+          alert(this.value);    // 此时的this指向被点击的对象，也就是上面的#inp按钮
+        }).setStyle("backgroundColor", "red");
+      });
+      // alert($);
+    </script>
+  </body>
+</html>
