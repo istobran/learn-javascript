@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>测试页面</title>
+  </head>
+  <body>
+    <div id="one">wwwwwwwwww</div>
+    <script type="text/javascript">
+      var one = document.getElementById("one")
+      var type = "click";
+      function fn() {
+        this.style.backgroundColor = "red";
+      }
+      if (window.addEventListener) {      //W3C DOM2.0
+        one.addEventListener(type, fn);
+      } else if (window.attachEvent) {    // IE6/7/8
+        one.attachEvent("on"+type, fn);
+      } else {      //原理同第一种， DOM 0 写法
+        one["on"+type] = fn;
+      }
+    </script>
+  </body>
+</html>

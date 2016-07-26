@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>事件流机制</title>
+  </head>
+  <body>
+    <pre>
+      常见的事件类型：
+          鼠标：
+              click          单击
+              dblclick       双击
+              contextmenu    右键菜单
+
+              mouseover      进入（包括子节点）
+              mouseout       离开（包括子节点）
+              mousedown      按下
+              mouseup        抬起
+              mousemove      移动
+              mouseenter     进入（不包括子节点）
+              mouseleave     离开（不包括子节点）
+
+          键盘：
+              keypress       按键敲击
+              keydown        按键按下
+              keyup          按键松开
+
+          文档：
+              load           页面加载
+              unload         页面关闭
+              beforeunload   关闭之前
+
+          表单：
+              focus          获得焦点
+              blur           失去焦点
+              change         内容变化
+              submit         表单提交
+              reset          表单重置
+
+          其他：
+              scroll         页面滚动
+              select         选中文字
+              selectstart    开始选中内容时
+              。。。
+    </pre>
+    <pre>
+      添加事件的四种方法
+          第一种：直接在标签的属性上加事件
+            <input type="button" name="name" on事件="事件处理程序" value="123">
+          第二种：使用script标签的for属性（IE 特有写法，不推荐）
+          <div id="one">wwwwwwwwww</div>
+          <script for="one" event="onclick">
+            this.style.backgroundColor = "red";
+          </script>
+          第三种：js直接在dom元素上添加事件（原理同第一种）
+          <div id="one">wwwwwwwwww</div>
+          <script type="text/javascript">
+            document.getElementById("one").onclick = function() {
+              this.style.backgroundColor = "red";
+            };
+          </script>
+          第四种，使用事件监听器
+          <script type="text/javascript">
+            var one = document.getElementById("one")
+            var type = "click";
+            function fn() {
+              this.style.backgroundColor = "red";
+            }
+            if (window.addEventListener) {      //W3C DOM2.0
+              one.addEventListener(type, fn);
+            } else if (window.attachEvent) {    // IE6/7/8
+              one.attachEvent("on"+type, fn);
+            } else {      //原理同第一种， DOM 0 写法
+              one["on"+type] = fn;
+            }
+          </script>
+    </pre>
+  </body>
+</html>
