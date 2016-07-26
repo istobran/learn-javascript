@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>鼠标坐标跟踪器</title>
+  </head>
+  <body>
+    <div id="display">
+      move mouse
+    </div>
+    <script type="text/javascript">
+      window.onmousemove = function() {
+        var cx = event.clientX,
+            cy = event.clientY,
+            sx = event.screenX,
+            sy = event.screenY;
+        var str =
+        " clientX = " + cx +
+        " clientY = " + cy +
+        " screenX = " + sx +
+        " screenY = " + sy ;
+        document.getElementById("display").innerHTML = str;
+        window.status = str;
+        document.title = str;
+      };
+    </script>
+  </body>
+</html>
