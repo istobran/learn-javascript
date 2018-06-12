@@ -13,7 +13,11 @@ var scheduleFlush = function(flush) {
   var browserGlobal = browserWindow || {};
   var BrowserMutationObserver = browserGlobal.MutationObserver || browserGlobal.WebKitMutationObserver;
   var isWorker = typeof Uint8ClampedArray !== 'undefined' && typeof importScripts !== 'undefined' && typeof MessageChannel !== 'undefined';
-  // node
+  
+  /**
+   * node 环境下使用 process.nextTick();
+   * @return {Function}
+   */
   function useNextTick() {
     // node version 0.10.x displays a deprecation warning when nextTick is used recursively
     // see https://github.com/cujojs/when/issues/410 for details
@@ -22,6 +26,10 @@ var scheduleFlush = function(flush) {
     };
   }
 
+  /**
+   * 尝试调用 vertx
+   * @return {Function}
+   */
   function attemptVertx() {
     try {
       var vertx = Function('return this')().require('vertx');
@@ -32,7 +40,10 @@ var scheduleFlush = function(flush) {
     }
   }
   
-  // vertx
+  /**
+   * 调用 vertx timer
+   * @return {Function}
+   */
   function useVertxTimer() {
     if (typeof vertxNext !== 'undefined') {
       return function () {
@@ -43,6 +54,10 @@ var scheduleFlush = function(flush) {
     return useSetTimeout();
   }
 
+  /**
+   * 使用 DOM 的观察者监听器 MutationObserver
+   * @return {Function}
+   */
   function useMutationObserver() {
     var iterations = 0;
     var observer = new BrowserMutationObserver(flush);
@@ -54,7 +69,10 @@ var scheduleFlush = function(flush) {
     };
   }
 
-  // web worker
+  /**
+   * 使用 web worker 的 MessageChannel
+   * @return {Function}
+   */
   function useMessageChannel() {
     var channel = new MessageChannel();
     channel.port1.onmessage = flush;
@@ -63,6 +81,7 @@ var scheduleFlush = function(flush) {
     };
   }
 
+  // 根据环境选择不同的异步执行方案
   if (isNode) {
     asyncFunc = useNextTick();    // process.nextTick()
   } else if (BrowserMutationObserver) {
@@ -72,7 +91,7 @@ var scheduleFlush = function(flush) {
   } else if (browserWindow === undefined && typeof require === 'function') {
     asyncFunc = attemptVertx();   // vert.x 方案
   } else {
-    asyncFunc = useSetTimeout();
+    asyncFunc = useSetTimeout();    // 原始的 setTimeout 方案
   }
 
   asyncFunc();
