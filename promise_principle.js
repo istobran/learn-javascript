@@ -1,5 +1,5 @@
-// 通过 ES5 手动实现 ES6 的 Promise
 "use strict"
+// 通过 ES5 手动实现 ES6 的 Promise
 
 /**
  * 根据环境不同选择 promise 的异步执行方案
