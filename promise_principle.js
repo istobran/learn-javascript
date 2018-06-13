@@ -102,7 +102,7 @@ var scheduleFlush = function(flush) {
  * @param {Function} asyncTask 初始化函数
  */
 var MyPromise = (function() {   // 通过立即执行函数封装私有变量
-  var state = { PENDING: 0, FULLFILLED: 1, REJECTED: 2 };   // 内部执行状态常量
+  var state = { PENDING: 0, FULFILLED: 1, REJECTED: 2 };   // 内部执行状态常量
   var MyPromise = function(asyncTask) {
     var asyncState = state.PENDING;     // 状态
     var hasSolution = false;    // 是否有下一级程序
@@ -163,7 +163,7 @@ var MyPromise = (function() {   // 通过立即执行函数封装私有变量
      */
     var resolve = function() {
       if (asyncState !== state.PENDING) return;
-      asyncState = state.FULLFILLED;
+      asyncState = state.FULFILLED;
       asyncResult = arguments;
       if (hasSolution) {
         if (projectA instanceof Function) {
@@ -193,24 +193,24 @@ var MyPromise = (function() {   // 通过立即执行函数封装私有变量
 
     /**
      * then 函数
-     * @param {Function} onFullfilled 成功回调
+     * @param {Function} onFulfilled 成功回调
      * @param {Function} onRejected 失败回调
      * @return {MyPromise} 返回用于下一步操作的 Promise
      */
-    this.then = function(onFullfilled, onRejected) {
+    this.then = function(onFulfilled, onRejected) {
       hasSolution = true;
       switch (asyncState) {
         case state.PENDING:   // 在 pending 的话返回一个等待完成的 promise
-          projectA = onFullfilled;
+          projectA = onFulfilled;
           projectB = onRejected;
           return new MyPromise(function(resolve, reject) {
             // 该 promise 的决定权交由上一级 promise 的 represent 管理
             represent.resolve = resolve;
             represent.reject = reject;
           });
-        case state.FULLFILLED:    // 当前 promise 已经执行完毕，则立即调用同步的执行方法
-          if (onFullfilled instanceof Function) {
-            return syncPlan(onFullfilled, asyncResult);
+        case state.FULFILLED:    // 当前 promise 已经执行完毕，则立即调用同步的执行方法
+          if (onFulfilled instanceof Function) {
+            return syncPlan(onFulfilled, asyncResult);
           } else {
             return MyPromise.resolve(asyncResult);
           }
